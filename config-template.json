@@ -26,6 +26,8 @@
 			"path": "/s00/ws",
 			"local": "localhost:8090",
 			"name": "Test server",
+			"season": "summer",
+			"holiday": "none",
 			"desc": "Testing server",
 			"flags": {
 				"test": true

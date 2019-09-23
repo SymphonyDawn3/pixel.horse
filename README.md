@@ -179,6 +179,8 @@ Add `config.json` file in root directory with following content. You can use `co
       "local": "localhost:8090",
       "name": "Dev server",
       "desc": "Development server",
+      "season": "summer", // optional, defaults to summer, seasons are "spring", "summer", "autumn" and "winter"
+      "holiday": "none", // optional, defaults to none, holidays are "none", "halloween", "christmas", "stpatricks" and "easter"
       "flag": "test", // optional flag ("test", "star" or space separated list of country flags)
       "flags": { // optional feature flags
         "test": true, // test server

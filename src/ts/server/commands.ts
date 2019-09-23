@@ -100,6 +100,8 @@ export function parseHoliday(value?: string): Holiday | undefined {
 		case 'none': return Holiday.None;
 		case 'halloween': return Holiday.Halloween;
 		case 'christmas': return Holiday.Christmas;
+		case 'stpatricks': return Holiday.StPatricks;
+		case 'easter': return Holiday.Easter;
 		default: return undefined;
 	}
 }
