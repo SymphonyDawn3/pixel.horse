@@ -19,7 +19,7 @@ import { PartyService } from './services/party';
 import { World, findClientByAccountId } from './world';
 import { log, chat } from './logger';
 import { createSay, LogChat } from './chat';
-import { createRunCommand, createCommands, getSpamCommandNames } from './commands';
+import { createRunCommand, createCommands, getSpamCommandNames, parseSeason, parseHoliday } from './commands';
 import { createIgnorePlayer, findClientByEntityId, createClientAndPony } from './playerUtils';
 import { createUpdateSettings } from './api/account';
 import { findAccountSafe, updateAccount, SupporterInvite, Account, IAccount, findFriendIds, findHideIds } from './db';
@@ -59,8 +59,8 @@ export function createServerActionsFactory(
 	const statesCounter = new CounterService<CharacterState>(10 * SECOND);
 	const logChatMessage: LogChat = (client, text, type, ignored, target) => chat(server, client, text, type, ignored, target);
 
-	world.season = SEASON;
-	world.holiday = HOLIDAY;
+	world.season = parseSeason(server.season) || SEASON;
+	world.holiday = parseHoliday(server.holiday) || HOLIDAY;
 
 	try {
 		const hidingData = fs.readFileSync(hidingDataPath(server.id), 'utf8');

@@ -83,7 +83,8 @@ function adminModChat(names: string[], help: string, role: string, type: Message
 	});
 }
 
-function parseSeason(value: string): Season | undefined {
+export function parseSeason(value?: string): Season | undefined {
+    if (!value) return undefined;
 	switch (value.toLowerCase()) {
 		case 'spring': return Season.Spring;
 		case 'summer': return Season.Summer;
@@ -93,7 +94,8 @@ function parseSeason(value: string): Season | undefined {
 	}
 }
 
-function parseHoliday(value: string): Holiday | undefined {
+export function parseHoliday(value?: string): Holiday | undefined {
+    if (!value) return undefined;
 	switch (value.toLowerCase()) {
 		case 'none': return Holiday.None;
 		case 'halloween': return Holiday.Halloween;
