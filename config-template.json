@@ -19,6 +19,8 @@
 		}
 	},
 	"assetsPath": "assets-source",
+	"season": "spring",
+	"holiday": "none",
 	"servers": [
 		{
 			"id": "test",
@@ -26,7 +28,7 @@
 			"path": "/s00/ws",
 			"local": "localhost:8090",
 			"name": "Test server",
-			"season": "summer",
+			"season": "spring",
 			"holiday": "none",
 			"desc": "Testing server",
 			"flags": {

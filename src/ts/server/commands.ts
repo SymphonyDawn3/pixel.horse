@@ -84,7 +84,7 @@ function adminModChat(names: string[], help: string, role: string, type: Message
 }
 
 export function parseSeason(value?: string): Season | undefined {
-    if (!value) return undefined;
+	if (!value) return undefined;
 	switch (value.toLowerCase()) {
 		case 'spring': return Season.Spring;
 		case 'summer': return Season.Summer;
@@ -95,7 +95,7 @@ export function parseSeason(value?: string): Season | undefined {
 }
 
 export function parseHoliday(value?: string): Holiday | undefined {
-    if (!value) return undefined;
+	if (!value) return undefined;
 	switch (value.toLowerCase()) {
 		case 'none': return Holiday.None;
 		case 'halloween': return Holiday.Halloween;
