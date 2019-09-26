@@ -1,6 +1,6 @@
 import { range, compact, escapeRegExp } from 'lodash';
 import {
-	MessageType, ChatType, Expression, Eye, Muzzle, Action, Season, Holiday, Weather, toAnnouncementMessageType,
+	MessageType, ChatType, Expression, Eye, Muzzle, Action, Weather, toAnnouncementMessageType,
 } from '../common/interfaces';
 import { hasRole } from '../common/accountUtils';
 import { butterfly, bat, firefly, cloud, getEntityType, getEntityTypeName } from '../common/entities';
@@ -17,7 +17,7 @@ import {
 	setEntityExpression, execAction, teleportTo
 } from './playerUtils';
 import { ServerLiveSettings, GameServerSettings } from '../common/adminInterfaces';
-import { isCommand, processCommand, clamp, flatten, includes, randomPoint } from '../common/utils';
+import { isCommand, processCommand, clamp, flatten, includes, randomPoint, parseSeason, parseHoliday } from '../common/utils';
 import { createNotifyUpdate, createShutdownServer } from './api/internal';
 import { logger } from './logger';
 import { pathTo } from './paths';
@@ -81,29 +81,6 @@ function adminModChat(names: string[], help: string, role: string, type: Message
 	return command(names, help, role, ({ }, client, message, _, __, settings) => {
 		sayToEveryone(client, message, filterBadWords(message), type, settings);
 	});
-}
-
-export function parseSeason(value?: string): Season | undefined {
-	if (!value) return undefined;
-	switch (value.toLowerCase()) {
-		case 'spring': return Season.Spring;
-		case 'summer': return Season.Summer;
-		case 'autumn': return Season.Autumn;
-		case 'winter': return Season.Winter;
-		default: return undefined;
-	}
-}
-
-export function parseHoliday(value?: string): Holiday | undefined {
-	if (!value) return undefined;
-	switch (value.toLowerCase()) {
-		case 'none': return Holiday.None;
-		case 'halloween': return Holiday.Halloween;
-		case 'christmas': return Holiday.Christmas;
-		case 'stpatricks': return Holiday.StPatricks;
-		case 'easter': return Holiday.Easter;
-		default: return undefined;
-	}
 }
 
 function parseWeather(value: string): Weather | undefined {
