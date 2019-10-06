@@ -616,6 +616,11 @@ export interface Pony extends Entity {
 	lastBoopSplash: number;
 }
 
+export interface SpawnConditions {
+	season?: Season;
+	holiday?: Holiday;
+}
+
 export interface Region {
 	x: number; // region number in X axis
 	y: number; // region number in Y axis

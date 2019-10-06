@@ -1,24 +1,29 @@
 import { writeFileAsync, readFileAsync, writeFileSync } from 'fs';
 import { fromByteArray } from 'base64-js';
 import {
-	TileType, MapInfo, MapState, defaultMapState, Rect, MapType, ServerFlags, EntityFlags, MapFlags, EntityState
+	TileType, MapInfo, MapState, defaultMapState, Rect, MapType, ServerFlags, EntityFlags, MapFlags, EntityState, Holiday, Season
 } from '../common/interfaces';
 import { getRegionGlobal, getTile, getRegion } from '../common/worldMap';
-import { distanceSquaredXY, containsPoint, hasFlag } from '../common/utils';
+import { distanceSquaredXY, containsPoint, hasFlag, parseSeason, parseHoliday } from '../common/utils';
 import { POSITION_MAX } from '../common/movementUtils';
 import { getEntityTypeName, getEntityType, createAnEntity } from '../common/entities';
 import { deserializeTiles } from '../common/compress';
 import { rect } from '../common/rect';
 import { snapshotRegionTiles, setRegionTile, createServerRegion, getSizeOfRegion, cloneServerRegion } from './serverRegion';
-import { ServerEntity, ServerRegion, ServerMap, MapUsage } from './serverInterfaces';
+import { ServerEntity, ServerRegion, ServerMap, MapUsage, SpawnCondition } from './serverInterfaces';
 import { getTileColor } from '../common/colors';
 import { World } from './world';
 import { REGION_SIZE, REGION_HEIGHT, REGION_WIDTH, tileWidth, tileHeight } from '../common/constants';
 import { pathTo } from './paths';
 import { createCanvas } from './canvasUtilsNode';
 import { mockPaletteManager } from '../common/ponyInfo';
-import { setEntityName } from './entityUtils';
+import { setEntityName, setEntitySpecialSpawn } from './entityUtils';
 import { WallController } from './controllers/wallController';
+
+export interface JsonSpawnConditions {
+	season?: string;
+	holiday?: string;
+}
 
 export interface EntityData {
 	type: string;
@@ -26,6 +31,7 @@ export interface EntityData {
 	y: number;
 	options?: any;
 	name?: string;
+	spawnConditions?: JsonSpawnConditions;
 }
 
 export interface MapData {
@@ -304,12 +310,20 @@ export function loadMap(world: World, map: ServerMap, data: MapData, loadOptions
 	}
 
 	if (loadOptions.loadEntities && data.entities) {
-		for (const { x, y, type, name, options } of data.entities) {
+		for (const { x, y, type, name, options, spawnConditions } of data.entities) {
 			const typeNumber = getEntityType(type);
 			const entity = createAnEntity(typeNumber, 0, x, y, options, mockPaletteManager, world);
 
 			if (name) {
 				setEntityName(entity, name);
+			}
+
+			if (spawnConditions) {
+				let conditions: SpawnCondition = {
+					season: parseSeason(spawnConditions.season),
+					holiday: parseHoliday(spawnConditions.holiday)
+				}
+				setEntitySpecialSpawn(entity, conditions)
 			}
 
 			if (loadOptions.loadEntitiesAsEditable) {

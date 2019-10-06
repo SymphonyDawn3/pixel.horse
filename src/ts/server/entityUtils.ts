@@ -4,7 +4,7 @@ import {
 	Entity, Rect, EntityState, UpdateFlags, Action, EntityOrPonyOptions, UpdateType, TileType, canWalk, setAnimationToEntityState
 } from '../common/interfaces';
 import { normalize, containsPoint, boundsIntersect, clamp, pointInXYWH, hasFlag, setFlag } from '../common/utils';
-import { ServerEntity, ServerEntityWithClient, ServerMap, EntityUpdateBase, IClient } from './serverInterfaces';
+import { ServerEntity, ServerEntityWithClient, ServerMap, EntityUpdateBase, IClient, SpawnCondition } from './serverInterfaces';
 import {
 	isCritter, isDecal, entityInRange, SIT_ON_BOUNDS_WIDTH, SIT_ON_BOUNDS_HEIGHT, SIT_ON_BOUNDS_OFFSET
 } from '../common/entityUtils';
@@ -32,6 +32,10 @@ export function getEntityName(entity: ServerEntity, client: IClient) {
 	} else {
 		return entity.name;
 	}
+}
+
+export function setEntitySpecialSpawn(entity: ServerEntity, SpawnConditons: Partial<SpawnCondition>) {
+		Object.assign(entity.spawnCondition || {}, SpawnConditons);
 }
 
 const grapeTypes = [...grapesPurple.map(x => x.type), ...grapesGreen.map(x => x.type)];

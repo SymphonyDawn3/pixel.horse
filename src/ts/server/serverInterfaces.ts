@@ -2,7 +2,7 @@ import { ClientExtensions, BinaryWriter } from 'ag-sockets';
 import { ClientActions } from '../client/clientActions';
 import {
 	Entity, ServerFlags, AccountSettings, NotificationFlags, Expression, Camera, SayData, Region, TileUpdate,
-	Rect, IMap, MapType, TileType, MapState, UpdateFlags, Action, EntityOrPonyOptions, EntityPlayerState, MapFlags
+	Rect, IMap, MapType, TileType, MapState, UpdateFlags, Action, EntityOrPonyOptions, EntityPlayerState, MapFlags, Season, Holiday
 } from '../common/interfaces';
 import { IAccount, ICharacter, UpdateAccount } from './db';
 import { AccountUpdate, CharacterState, GameServerSettings, Suspicious } from '../common/adminInterfaces';
@@ -229,6 +229,11 @@ export interface IClient extends ClientActions, ClientExtensions {
 
 export type Interact = (target: ServerEntity, client: IClient) => void;
 
+export interface SpawnCondition {
+	season?: Season;
+	holiday?: Holiday;
+}
+
 export interface ServerEntity extends Entity {
 	// flags
 	serverFlags?: ServerFlags;
@@ -238,6 +243,7 @@ export interface ServerEntity extends Entity {
 	// state
 	region?: ServerRegion;
 	client?: IClient;
+	spawnCondition?: SpawnCondition;
 
 	// interaction
 	interact?: Interact;
