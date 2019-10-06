@@ -1,7 +1,7 @@
 import { writeFileAsync, readFileAsync, writeFileSync } from 'fs';
 import { fromByteArray } from 'base64-js';
 import {
-	TileType, MapInfo, MapState, defaultMapState, Rect, MapType, ServerFlags, EntityFlags, MapFlags, EntityState, Holiday, Season
+	TileType, MapInfo, MapState, defaultMapState, Rect, MapType, ServerFlags, EntityFlags, MapFlags, EntityState
 } from '../common/interfaces';
 import { getRegionGlobal, getTile, getRegion } from '../common/worldMap';
 import { distanceSquaredXY, containsPoint, hasFlag, parseSeason, parseHoliday } from '../common/utils';
