@@ -539,6 +539,11 @@ export function parseHoliday(value?: string): Holiday | undefined {
 	}
 }
 
+export function isDefined<T>(argument: T | undefined): argument is T {
+	return argument !== undefined
+}
+
+
 // events
 
 export type AnyEvent = MouseEvent | PointerEvent | TouchEvent;

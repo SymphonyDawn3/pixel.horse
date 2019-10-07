@@ -4,7 +4,7 @@ import {
 	TileType, MapInfo, MapState, defaultMapState, Rect, MapType, ServerFlags, EntityFlags, MapFlags, EntityState, Season, Holiday
 } from '../common/interfaces';
 import { getRegionGlobal, getTile, getRegion } from '../common/worldMap';
-import { distanceSquaredXY, containsPoint, hasFlag, parseSeason, parseHoliday } from '../common/utils';
+import { distanceSquaredXY, containsPoint, hasFlag, parseSeason, parseHoliday, isDefined } from '../common/utils';
 import { POSITION_MAX } from '../common/movementUtils';
 import { getEntityTypeName, getEntityType, createAnEntity } from '../common/entities';
 import { deserializeTiles } from '../common/compress';
@@ -316,10 +316,6 @@ export function loadMap(world: World, map: ServerMap, data: MapData, loadOptions
 
 			if (name) {
 				setEntityName(entity, name);
-			}
-
-			function isDefined<T>(argument: T | undefined): argument is T {
-				return argument !== undefined
 			}
 
 			if (spawnConditions) {
