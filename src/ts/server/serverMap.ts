@@ -1,7 +1,7 @@
 import { writeFileAsync, readFileAsync, writeFileSync } from 'fs';
 import { fromByteArray } from 'base64-js';
 import {
-	TileType, MapInfo, MapState, defaultMapState, Rect, MapType, ServerFlags, EntityFlags, MapFlags, EntityState
+	TileType, MapInfo, MapState, defaultMapState, Rect, MapType, ServerFlags, EntityFlags, MapFlags, EntityState, Season, Holiday
 } from '../common/interfaces';
 import { getRegionGlobal, getTile, getRegion } from '../common/worldMap';
 import { distanceSquaredXY, containsPoint, hasFlag, parseSeason, parseHoliday } from '../common/utils';
@@ -21,8 +21,8 @@ import { setEntityName, setEntitySpecialSpawn } from './entityUtils';
 import { WallController } from './controllers/wallController';
 
 export interface JsonSpawnConditions {
-	season?: string;
-	holiday?: string;
+	season?: string[];
+	holiday?: string[];
 }
 
 export interface EntityData {
@@ -318,10 +318,22 @@ export function loadMap(world: World, map: ServerMap, data: MapData, loadOptions
 				setEntityName(entity, name);
 			}
 
+			function isDefined<T>(argument: T | undefined): argument is T {
+				return argument !== undefined
+			}
+
 			if (spawnConditions) {
+				let seasonArray: (Season[] | undefined) = [];
+				let holidayArray: (Holiday[] | undefined) = [];
+				if (spawnConditions.season) {
+					seasonArray = spawnConditions.season.map(parseSeason).filter(isDefined)
+				};
+				if (spawnConditions.holiday) {
+					holidayArray = spawnConditions.holiday.map(parseHoliday).filter(isDefined)
+				};
 				let conditions: SpawnCondition = {
-					season: parseSeason(spawnConditions.season),
-					holiday: parseHoliday(spawnConditions.holiday)
+					season: seasonArray,
+					holiday: holidayArray
 				}
 				setEntitySpecialSpawn(entity, conditions)
 			}

@@ -230,8 +230,8 @@ export interface IClient extends ClientActions, ClientExtensions {
 export type Interact = (target: ServerEntity, client: IClient) => void;
 
 export interface SpawnCondition {
-	season?: Season;
-	holiday?: Holiday;
+	season?: Season[];
+	holiday?: Holiday[];
 }
 
 export interface ServerEntity extends Entity {

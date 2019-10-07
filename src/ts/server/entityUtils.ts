@@ -34,8 +34,8 @@ export function getEntityName(entity: ServerEntity, client: IClient) {
 	}
 }
 
-export function setEntitySpecialSpawn(entity: ServerEntity, SpawnConditons: Partial<SpawnCondition>) {
-		Object.assign(entity.spawnCondition || {}, SpawnConditons);
+export function setEntitySpecialSpawn(entity: ServerEntity, SpawnConditions: Partial<SpawnCondition>) {
+		Object.assign(entity.spawnCondition || {}, SpawnConditions);
 }
 
 const grapeTypes = [...grapesPurple.map(x => x.type), ...grapesGreen.map(x => x.type)];
