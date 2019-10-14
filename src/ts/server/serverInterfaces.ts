@@ -234,6 +234,11 @@ export interface SpawnCondition {
 	holiday?: Holiday[];
 }
 
+export interface EntityMap {
+	entity: ServerEntity;
+	map: ServerMap;
+}
+
 export interface ServerEntity extends Entity {
 	// flags
 	serverFlags?: ServerFlags;

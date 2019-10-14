@@ -10,7 +10,7 @@ import {
 	MAP_SWITCHES_PER_UPDATE, MINUTE, SERVER_FPS, HOUR
 } from '../common/constants';
 import {
-	IClient, ServerEntity, Controller, GetSettings, ServerNotification, SocketStats, ServerMap, MapUsage
+	IClient, ServerEntity, Controller, GetSettings, ServerNotification, SocketStats, ServerMap, MapUsage, SpawnCondition, EntityMap
 } from './serverInterfaces';
 import { isTileLocked, getMapInfo, setTile, hasAnyClients, createMinimap } from './serverMap';
 import { getModInfo } from './accountUtils';
@@ -43,7 +43,7 @@ import { updateTileIndices } from '../client/tileUtils';
 import { removeEntityFromRegion } from './serverRegion';
 import { createIslandMap } from './maps/islandMap';
 import { createHouseMap } from './maps/houseMap';
-import { updateMainMapSeason } from './maps/mainMap';
+import { updateMainMapSeason, hasSpawnCondition } from './maps/mainMap';
 
 interface MapSwitch {
 	map: ServerMap;
@@ -78,6 +78,7 @@ export class World {
 	private offlineClients: IClient[] = [];
 	private baseTime = 0;
 	private entityById = new Map<number, ServerEntity>();
+	private unloadedEntities = new Array<EntityMap>();
 	private reservedIds = new Map<number, string>();
 	private reservedIdsByKey = new Map<string, ReservedID>();
 	constructor(
@@ -207,6 +208,18 @@ export class World {
 		} else {
 			DEVELOPMENT && logger.error(`Missing map for entity`);
 		}
+	}
+	unloadEntity(entity: ServerEntity, altMap?: ServerMap) {
+		let map: ServerMap = this.removeEntityFromAnyMap(entity)! || altMap;
+		let entityMapCombo: EntityMap = { entity: entity, map: map };
+		this.unloadedEntities.push(entityMapCombo);
+		return entity;
+	}
+	loadSeasonalEntity(conditions: SpawnCondition) {
+
+		let seasonalEntity: EntityMap[] = this.unloadedEntities.filter(value => hasSpawnCondition(value.entity.spawnCondition!, conditions));
+		this.unloadedEntities = this.unloadedEntities.filter(value => !hasSpawnCondition(value.entity.spawnCondition!, conditions));
+		seasonalEntity.forEach(element => this.addEntity(element.entity, element.map));
 	}
 	// map
 	getMainMap() {

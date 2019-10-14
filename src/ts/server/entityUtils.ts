@@ -15,6 +15,7 @@ import { shouldBeFacingRight } from '../common/movementUtils';
 import { writeOneEntity, writeOneUpdate } from '../common/encoders/updateEncoder';
 import { PONY_TYPE } from '../common/constants';
 import { grapesPurple, grapesGreen } from '../common/entities';
+import { serverEntity } from '../tests/mocks';
 
 export function isEntityShadowed(entity: ServerEntity): entity is ServerEntityWithClient {
 	return entity.client !== undefined && entity.client.shadowed;
@@ -34,8 +35,9 @@ export function getEntityName(entity: ServerEntity, client: IClient) {
 	}
 }
 
-export function setEntitySpecialSpawn(entity: ServerEntity, SpawnConditions: Partial<SpawnCondition>) {
-		Object.assign(entity.spawnCondition || {}, SpawnConditions);
+export function setEntitySpecialSpawn(entity: ServerEntity | ServerEntity[], SpawnConditions: Partial<SpawnCondition>) {
+	entity = ([] as ServerEntity[]).concat(entity);
+	entity.forEach(function (condition) { Object.assign(condition.spawnCondition || {}, SpawnConditions) })
 }
 
 const grapeTypes = [...grapesPurple.map(x => x.type), ...grapesGreen.map(x => x.type)];
