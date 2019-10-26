@@ -209,14 +209,13 @@ export class World {
 			DEVELOPMENT && logger.error(`Missing map for entity`);
 		}
 	}
-	unloadEntity(entity: ServerEntity, altMap?: ServerMap) {
+	unloadEntity(entity: ServerEntity, altMap: ServerMap) {
 		let map: ServerMap = this.removeEntityFromAnyMap(entity)! || altMap;
 		let entityMapCombo: EntityMap = { entity: entity, map: map };
 		this.unloadedEntities.push(entityMapCombo);
 		return entity;
 	}
 	loadSeasonalEntity(conditions: SpawnCondition) {
-
 		let seasonalEntity: EntityMap[] = this.unloadedEntities.filter(value => hasSpawnCondition(value.entity.spawnCondition!, conditions));
 		this.unloadedEntities = this.unloadedEntities.filter(value => !hasSpawnCondition(value.entity.spawnCondition!, conditions));
 		seasonalEntity.forEach(element => this.addEntity(element.entity, element.map));

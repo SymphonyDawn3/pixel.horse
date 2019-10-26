@@ -27,7 +27,6 @@ import { toWorldX } from '../../common/positionUtils';
 import { deserializeTiles } from '../../common/compress';
 import * as ctrl from '../controllers';
 import { isNightTime, isDayTime } from '../../common/timeUtils';
-import { serverEntity } from '../../tests/mocks';
 
 const mainMapData = JSON.parse(fs.readFileSync(pathTo('src', 'maps', 'main.json'), 'utf8'));
 const mainMapTiles = deserializeTiles(mainMapData.tiles);
@@ -76,8 +75,8 @@ function donateEgg(_: any, client: IClient) {
 }
 
 export function hasSpawnCondition(value: SpawnCondition, conditions: SpawnCondition): boolean {
-	if ((conditions.season && value.season && value.season.filter(element => includes(conditions.season, element))) ||
-		(conditions.holiday && value.holiday && value.holiday.filter(element => includes(conditions.holiday, element)))) {
+	if ((conditions.season && value.season && value.season.filter(element => includes(conditions.season, element)).length) ||
+		(conditions.holiday && value.holiday && value.holiday.filter(element => includes(conditions.holiday, element)).length)) {
 		return true;
 	}
 	else return false;
@@ -89,14 +88,14 @@ function removeSeasonalObjects(world: World, map: ServerMap) {
 
 	for (const region of map.regions) {
 		for (const entity of region.entities) {
-			if (entity.spawnCondition && hasSpawnCondition(entity.spawnCondition, currentSeason)) {
+			if (entity.spawnCondition && !hasSpawnCondition(entity.spawnCondition, currentSeason)) {
 				remove.push(entity);
 			}
 		}
 	}
 
 	for (const entity of remove) {
-		world.unloadEntity(entity);
+		world.unloadEntity(entity, map);
 	}
 }
 
@@ -110,11 +109,12 @@ function createSeasonalObjects(world: World, map: ServerMap) {
 	function add(entity: ServerEntity, conditions?: SpawnCondition) {
 		entity.serverFlags! |= ServerFlags.Seasonal;
 		if (conditions) {
-			setEntitySpecialSpawn(entity, conditions)
-			if (entity.spawnCondition &&
-				(entity.spawnCondition.season && includes(entity.spawnCondition.season, world.season) ||
-				(entity.spawnCondition.holiday && includes(entity.spawnCondition.holiday, world.holiday)))) {
-				return world.unloadEntity(entity);
+			const currentSeason: SpawnCondition = { season: [world.season] };
+			const currentHoliday: SpawnCondition = { holiday: [world.holiday] };
+			entity = setEntitySpecialSpawn(entity, conditions)[0];
+			if (!hasSpawnCondition(conditions, currentSeason) ||
+				!hasSpawnCondition(conditions, currentHoliday)) {
+				return world.unloadEntity(entity, map);
 			}
 		}
 		return world.addEntity(entity, map);
