@@ -15,6 +15,8 @@ import { logger, logPerformance } from '../logger';
 import { ObservableList } from './observableList';
 import { HOUR } from '../../common/constants';
 import { getLoginServer } from '../internal';
+import { shutdownServers, notifyUpdate } from '../api/admin';
+import { handleAction } from '../../client/handlers';
 
 function addAuthToAccount(account: Account, auth: Auth, log: string) {
 	const existingAuth = account.auths!.find(a => a._id === auth._id);
@@ -540,3 +542,15 @@ function removeById<U, T extends { _id: U }>(items: T[], id: U): T | undefined {
 		return undefined;
 	}
 }
+
+function handleSignal(signal: any){
+	console.log(`Received ${signal} Signal`);
+	if (signal==="SIGUSR1") {
+		shutdownServers('*', true); // Wildcard to shutdown all servers
+	} else if (signal==="SIGUSR2") {
+		notifyUpdate('*');
+	};
+};
+
+process.on('SIGUSR1', handleSignal);
+process.on('SIGUSR2', handleSignal);
