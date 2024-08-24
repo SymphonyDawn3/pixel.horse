@@ -17,6 +17,11 @@ To discuss licensing, contact `ponytownhelp@gmail.com`.
 * [ImageMagick](https://imagemagick.org/script/download.php#windows) (optional, required for generating preview gifs in animation tool)
 * [Git LFS](https://git-lfs.github.com/)
 
+### For Windows
+If you are using Windows to run this, you will need to additionally install CoreUtils and Grep on their respective pages on GnuWin32's SourceForge site (scroll all the way down to see the download section.)
+* [CoreUtils](https://gnuwin32.sourceforge.net/packages/coreutils.htm)
+* [Grep](https://gnuwin32.sourceforge.net/packages/grep.htm)
+
 ## Before you clone
 
 **Ensure you have Git LFS installed before you clone the repo!** Git LFS is required to pull down the asset files the game uses, as storing them in normal Git would stuff up the tree pretty badly.
